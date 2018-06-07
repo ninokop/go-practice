@@ -14,17 +14,17 @@ var Indexers = make(map[string]map[string]index, 0)
 func main() {
 	key := "RESTServer"
 	microServiceInstances := []*MicroServiceInstance{
-		{Metadata: map[string]string{"version": "0.0.1", "project": "nino"}},
-		{Metadata: map[string]string{"version": "0.0.1", "project": "nino"}},
-		{Metadata: map[string]string{"version": "0.0.1", "project": "nino"}},
-		{Metadata: map[string]string{"version": "0.0.2", "project": "eesly"}},
-		{Metadata: map[string]string{"version": "0.0.2", "project": "villa"}},
-		{Metadata: map[string]string{"version": "0.0.3", "project": "villa"}},
-		{Metadata: map[string]string{"version": "0.0.3", "project": "nino"}},
-		{Metadata: map[string]string{"version": "0.0.3", "project": "nino"}},
-		{Metadata: map[string]string{"version": "0.0.4", "project": "nino"}},
-		{Metadata: map[string]string{"version": "0.0.5", "project": "nino"}},
-		{Metadata: map[string]string{"version": "0.0.5", "project": "eesly"}},
+		{InstanceID: "01", Metadata: map[string]string{"version": "0.0.1", "project": "nino"}},
+		{InstanceID: "02", Metadata: map[string]string{"version": "0.0.1", "project": "nino"}},
+		{InstanceID: "03", Metadata: map[string]string{"version": "0.0.1", "project": "nino"}},
+		{InstanceID: "04", Metadata: map[string]string{"version": "0.0.2", "project": "eesly"}},
+		{InstanceID: "05", Metadata: map[string]string{"version": "0.0.2", "project": "villa"}},
+		{InstanceID: "06", Metadata: map[string]string{"version": "0.0.3", "project": "villa"}},
+		{InstanceID: "07", Metadata: map[string]string{"version": "0.0.3", "project": "nino"}},
+		{InstanceID: "08", Metadata: map[string]string{"version": "0.0.3", "project": "nino"}},
+		{InstanceID: "09", Metadata: map[string]string{"version": "0.0.4", "project": "nino"}},
+		{InstanceID: "10", Metadata: map[string]string{"version": "0.0.5", "project": "nino"}},
+		{InstanceID: "11", Metadata: map[string]string{"version": "0.0.5", "project": "eesly"}},
 	}
 
 	tags := map[string]string{"version": "0.0.3", "project": "villa"}
@@ -51,7 +51,7 @@ func initCache(key string, microServiceInstances []*MicroServiceInstance, tags m
 	}
 }
 
-func findMicroServiceInstances(key string, tags map[string]string) ([]*MicroServiceInstance, bool) {
+func findMicroServiceInstances(key string, tags map[string]string) (MicroServiceInstances, bool) {
 	v, ok := MicroserviceInstanceCache.Get(key)
 	if !ok {
 		return nil, false
@@ -61,7 +61,8 @@ func findMicroServiceInstances(key string, tags map[string]string) ([]*MicroServ
 	// if !ok {
 	// 	return nil, false
 	// }
-	ret := make([][]*MicroServiceInstance, len(tags))
+
+	ret := make([]MicroServiceInstances, len(tags))
 	i := 0
 	indexers := Indexers[key]
 	for ind, value := range tags {
@@ -70,7 +71,13 @@ func findMicroServiceInstances(key string, tags map[string]string) ([]*MicroServ
 		log.Printf("GetIndex %v for %v=%v", indexers[ind].Get(value), ind, value)
 
 	}
-	return util.MultiInterSection(ret), true
+	for i := range ret {
+		for j := range ret[i] {
+			log.Printf("InsID %v", ret[i][j].InstanceID)
+		}
+
+	}
+	return MultiInterSection(ret), true
 }
 
 type MicroServiceInstance struct {
