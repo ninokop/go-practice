@@ -43,7 +43,7 @@ func refreshCache(key string, microServiceInstances []*MicroServiceInstance) {
 }
 
 func findMicroServiceInstances(key string, tags map[string]string) ([]*MicroServiceInstance, bool) {
-	v, ok := MicroserviceInstanceCache.Get(key)git sta
+	v, ok := MicroserviceInstanceCache.Get(key)
 	if !ok {
 		return nil, false
 	}
